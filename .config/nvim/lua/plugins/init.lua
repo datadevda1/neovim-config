@@ -72,6 +72,8 @@ return {
         "mypy",
         "ruff-lsp",
         "pyright",
+        "lua-language-server",
+        "stylua",
       },
     },
   },
