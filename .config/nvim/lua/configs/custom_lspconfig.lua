@@ -42,7 +42,7 @@ cmp.setup {
   sources = {
     { name = "nvim_lsp" },
     { name = "luasnip", keyword_length = 2 },
-    { name = "buffer", keyword_length = 3 },
+    { name = "buffer",  keyword_length = 3 },
     { name = "path" },
   },
   mapping = cmp.mapping.preset.insert {
@@ -71,26 +71,37 @@ cmp.setup {
 --   }
 -- end
 
+-- json lsp
 lspconfig.jsonls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "json" },
 }
 
+-- pyright lsp for python
 lspconfig.pyright.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "python" },
 }
 
+-- ruff lsp for python
 lspconfig.ruff_lsp.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "python" },
 }
 
+-- html lsp
 lspconfig.html.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "html" },
+}
+
+-- latex lsp for markdown
+lspconfig.ltex.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { "markdown" },
 }

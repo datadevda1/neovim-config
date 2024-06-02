@@ -71,9 +71,9 @@ return {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      { "hrsh7th/nvim-cmp" }, -- Required
+      { "hrsh7th/nvim-cmp" },     -- Required
       { "hrsh7th/cmp-nvim-lsp" }, -- Required
-      { "L3MON4D3/LuaSnip" }, -- Required
+      { "L3MON4D3/LuaSnip" },     -- Required
       { "rafamadriz/friendly-snippets" },
       { "hrsh7th/cmp-buffer" },
       { "hrsh7th/cmp-path" },
@@ -96,6 +96,7 @@ return {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
+        "ltex-ls",
         "black",
         "debugpy",
         "mypy",
@@ -110,12 +111,12 @@ return {
   {
     "NeogitOrg/neogit",
     dependencies = {
-      "nvim-lua/plenary.nvim", -- required
+      "nvim-lua/plenary.nvim",  -- required
       "sindrets/diffview.nvim", -- optional - Diff integration
 
       -- Only one of these is needed, not both.
       "nvim-telescope/telescope.nvim", -- optional
-      "ibhagwan/fzf-lua", -- optional
+      "ibhagwan/fzf-lua",              -- optional
     },
     cmd = "Neogit",
     config = true,
