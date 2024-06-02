@@ -8,6 +8,25 @@ return {
   },
 
   -- These are some examples, uncomment them if you want to see them work!
+  -- {
+  --   "kevinhwang91/nvim-ufo",
+  --   dependencies = {
+  --     "kevinhwang91/promise-async",
+  --     "notomo/promise.nvim",
+  --   },
+  -- },
+  {
+    "nvimdev/lspsaga.nvim",
+    event = "LspAttach",
+    config = function()
+      require("lspsaga").setup {
+        lightbulb = {
+          enable = false,
+        },
+        ft = { "python", "html", "lua", "json", "sql" },
+      }
+    end,
+  },
   {
     "nvim-neotest/nvim-nio",
   },
@@ -51,9 +70,19 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
+    dependencies = {
+      { "hrsh7th/nvim-cmp" }, -- Required
+      { "hrsh7th/cmp-nvim-lsp" }, -- Required
+      { "L3MON4D3/LuaSnip" }, -- Required
+      { "rafamadriz/friendly-snippets" },
+      { "hrsh7th/cmp-buffer" },
+      { "hrsh7th/cmp-path" },
+      { "hrsh7th/cmp-cmdline" },
+      { "saadparwaiz1/cmp_luasnip" },
+    },
     config = function()
       require("nvchad.configs.lspconfig").defaults()
-      require "configs.custom_python_lspconfig"
+      require "configs.custom_lspconfig"
     end,
   },
   {
@@ -72,8 +101,6 @@ return {
         "mypy",
         "ruff-lsp",
         "pyright",
-        "lua-language-server",
-        "stylua",
       },
     },
   },
@@ -133,7 +160,31 @@ return {
       }
     end,
   },
-
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+  },
+  {
+    "smoka7/multicursors.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "smoka7/hydra.nvim",
+    },
+    opts = {},
+    cmd = { "MCstart", "MCvisual", "MCclear", "MCpattern", "MCvisualPattern", "MCunderCursor" },
+    keys = {
+      {
+        mode = { "v", "n" },
+        "<Leader>m",
+        "<cmd>MCstart<cr>",
+        desc = "Create a selection for selected text or word under the cursor",
+      },
+    },
+  },
   --
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
