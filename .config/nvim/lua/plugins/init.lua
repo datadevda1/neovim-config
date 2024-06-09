@@ -204,7 +204,47 @@ return {
 
       require("todo-comments").setup()
     end,
-  }
+  },
+  {
+    "LunarVim/bigfile.nvim",
+    config = function()
+      -- default config
+      require("bigfile").setup {
+        filesize = 1,      -- size of the file in MiB, the plugin round file sizes to the closest MiB
+        pattern = { "*" }, -- autocmd pattern or function see <### Overriding the detection of big files>
+        features = {       -- features to disable
+          "indent_blankline",
+          "illuminate",
+          "lsp",
+          "treesitter",
+          "syntax",
+          "matchparen",
+          "vimopts",
+          "filetype",
+        },
+      }
+    end
+  },
+  {
+    'SuperBo/fugit2.nvim',
+    opts = {
+      libgit2_path = 'libgit2.so.1.5',
+      width = 150,
+    },
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+      'nvim-tree/nvim-web-devicons',
+      'nvim-lua/plenary.nvim',
+      {
+        'chrisgrieser/nvim-tinygit', -- optional: for Github PR view
+        dependencies = { 'stevearc/dressing.nvim' }
+      },
+    },
+    cmd = { 'Fugit2', 'Fugit2Diff', 'Fugit2Graph' },
+    keys = {
+      { '<leader>F', mode = 'n', '<cmd>Fugit2<cr>' }
+    }
+  },
 
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
