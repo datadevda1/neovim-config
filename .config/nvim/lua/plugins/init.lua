@@ -205,26 +205,26 @@ return {
       require("todo-comments").setup()
     end,
   },
-  {
-    "LunarVim/bigfile.nvim",
-    config = function()
-      -- default config
-      require("bigfile").setup {
-        filesize = 1,      -- size of the file in MiB, the plugin round file sizes to the closest MiB
-        pattern = { "*" }, -- autocmd pattern or function see <### Overriding the detection of big files>
-        features = {       -- features to disable
-          "indent_blankline",
-          "illuminate",
-          "lsp",
-          "treesitter",
-          "syntax",
-          "matchparen",
-          "vimopts",
-          "filetype",
-        },
-      }
-    end
-  },
+  -- {
+  --   "LunarVim/bigfile.nvim",
+  --   config = function()
+  --     -- default config
+  --     require("bigfile").setup {
+  --       filesize = 1,      -- size of the file in MiB, the plugin round file sizes to the closest MiB
+  --       pattern = { "*" }, -- autocmd pattern or function see <### Overriding the detection of big files>
+  --       features = {       -- features to disable
+  --         "indent_blankline",
+  --         "illuminate",
+  --         "lsp",
+  --         "treesitter",
+  --         "syntax",
+  --         "matchparen",
+  --         "vimopts",
+  --         "filetype",
+  --       },
+  --     }
+  --   end
+  -- },
   {
     'SuperBo/fugit2.nvim',
     opts = {
@@ -242,10 +242,61 @@ return {
     },
     cmd = { 'Fugit2', 'Fugit2Diff', 'Fugit2Graph' },
     keys = {
-      { '<leader>F', mode = 'n', '<cmd>Fugit2<cr>' }
+      { '<leader>fg', mode = 'n', '<cmd>Fugit2<cr>' }
     }
   },
+  {
+    "tris203/precognition.nvim",
+    event = "VeryLazy",
+    config = {
+      startVisible = true,
+      showBlankVirtLine = true,
+      highlightColor = { link = "Comment" },
+      hints = {
+        Caret = { text = "^", prio = 2 },
+        Dollar = { text = "$", prio = 1 },
+        MatchingPair = { text = "%", prio = 5 },
+        Zero = { text = "0", prio = 1 },
+        w = { text = "w", prio = 10 },
+        b = { text = "b", prio = 9 },
+        e = { text = "e", prio = 8 },
+        W = { text = "W", prio = 7 },
+        B = { text = "B", prio = 6 },
+        E = { text = "E", prio = 5 },
+      },
+      gutterHints = {
+        G = { text = "G", prio = 10 },
+        gg = { text = "gg", prio = 9 },
+        PrevParagraph = { text = "{", prio = 8 },
+        NextParagraph = { text = "}", prio = 8 },
+      },
+    },
+  },
+  {
+    "FelipeSanchezSoberanis/copy-path",
+    event = { "BufNewFile", "BufReadPost", "BufWritePre", "BufWritePost" },
+    config = function()
+      local copy_path = require("copy-path")
 
+      vim.api.nvim_create_autocmd({ "FileType" }, {
+        pattern = { "json" },
+        callback = function(args)
+          vim.keymap.set("n", "<leader>cp", function()
+            copy_path.copy_json_path({ register = "+" })
+          end, { buffer = args.buf })
+        end
+      })
+
+      vim.api.nvim_create_autocmd({ "FileType" }, {
+        pattern = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+        callback = function(args)
+          vim.keymap.set("n", "<leader>cp", function()
+            copy_path.copy_javascript_path({ register = "+" })
+          end, { buffer = args.buf })
+        end
+      })
+    end
+  },
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
   -- 	opts = {
