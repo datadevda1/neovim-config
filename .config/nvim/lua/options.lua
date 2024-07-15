@@ -8,8 +8,6 @@ require "nvchad.options"
 -- code folding options
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-vim.opt.foldcolumn = "0"
-vim.opt.foldtext = ""
-vim.opt.foldlevel = 99
--- vim.opt.foldlevelstart = 1
-vim.opt.foldnestmax = 8
+vim.opt.foldcolumn = "1"
+vim.opt.foldlevel = 20
+vim.o.conceallevel = 1

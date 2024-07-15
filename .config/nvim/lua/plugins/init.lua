@@ -1,4 +1,5 @@
 return {
+
   {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save
@@ -71,7 +72,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      { "hrsh7th/nvim-cmp" },     -- Required
+      { "hrsh7th/nvim-cmp" },
       { "hrsh7th/cmp-nvim-lsp" }, -- Required
       { "L3MON4D3/LuaSnip" },     -- Required
       { "rafamadriz/friendly-snippets" },
@@ -207,6 +208,7 @@ return {
   },
   -- {
   --   "LunarVim/bigfile.nvim",
+  --   event = "BufReadPre",
   --   config = function()
   --     -- default config
   --     require("bigfile").setup {
@@ -297,6 +299,51 @@ return {
       })
     end
   },
+  {
+    "kdheepak/lazygit.nvim",
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "Open lazy git" },
+    },
+  }
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   opts = {
+  --     sources = {
+  --       { name = "nvim_lsp" },
+  --       { name = "luasnip" },
+  --       { name = "buffer" },
+  --       { name = "nvim_lua" },
+  --       { name = "path" },
+  --       { name = "cmp_tabnine" },
+  --     },
+  --   },
+  --
+  --   dependencies = {
+  --     {
+  --       "tzachar/cmp-tabnine",
+  --       build = "./install.sh",
+  --       config = function()
+  --         local tabnine = require "cmp_tabnine.config"
+  --         tabnine:setup {} -- put your options here
+  --       end,
+  --     },
+  --   },
+  -- },
+
+
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
   -- 	opts = {
