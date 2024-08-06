@@ -117,31 +117,6 @@ return {
     },
   },
   {
-    "NeogitOrg/neogit",
-    dependencies = {
-      "nvim-lua/plenary.nvim",  -- required
-      "sindrets/diffview.nvim", -- optional - Diff integration
-
-      -- Only one of these is needed, not both.
-      "nvim-telescope/telescope.nvim", -- optional
-      "ibhagwan/fzf-lua",              -- optional
-    },
-    cmd = "Neogit",
-    config = true,
-    -- config = function()
-    --   require("neogit").setup {
-    --     kind = "split", -- opens neogit in a split
-    --     signs = {
-    --       -- { CLOSED, OPENED }
-    --       section = { "", "" },
-    --       item = { "", "" },
-    --       hunk = { "", "" },
-    --     },
-    --     integrations = { diffview = true }, -- adds integration with diffview.nvim
-    --   }
-    -- end,
-  },
-  {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
@@ -172,14 +147,7 @@ return {
       }
     end,
   },
-  {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    ft = { "markdown" },
-    build = function()
-      vim.fn["mkdp#util#install"]()
-    end,
-  },
+
   {
     "smoka7/multicursors.nvim",
     event = "VeryLazy",
@@ -324,6 +292,56 @@ return {
     keys = {
       { "<leader>lg", "<cmd>LazyGit<cr>", desc = "Open lazy git" },
     },
+  },
+  {
+    "luckasRanarison/clear-action.nvim",
+    event = { "BufReadPre" },
+    opts = {}
+  },
+  {
+    'isakbm/gitgraph.nvim',
+    ---@type I.GGConfig
+    opts = {
+      symbols = {
+        merge_commit = 'M',
+        commit = '*',
+      },
+      format = {
+        timestamp = '%H:%M:%S %d-%m-%Y',
+        fields = { 'hash', 'timestamp', 'author', 'branch_name', 'tag' },
+      },
+      hooks = {
+        on_select_commit = function(commit)
+          print('selected commit:', commit.hash)
+        end,
+        on_select_range_commit = function(from, to)
+          print('selected range:', from.hash, to.hash)
+        end,
+      },
+    },
+    keys = {
+      {
+        "<leader>gl",
+        function()
+          require('gitgraph').draw({}, { all = true, max_count = 5000 })
+        end,
+        desc = "GitGraph - Draw",
+      },
+    },
+  },
+  {
+    "OXY2DEV/markview.nvim",
+    lazy = false, -- Recommended
+    -- ft = "markdown" -- If you decide to lazy-load anyway
+
+    dependencies = {
+      -- You will not need this if you installed the
+      -- parsers manually
+      -- Or if the parsers are in your $RUNTIMEPATH
+      "nvim-treesitter/nvim-treesitter",
+
+      "nvim-tree/nvim-web-devicons"
+    }
   }
   -- {
   --   "hrsh7th/nvim-cmp",
