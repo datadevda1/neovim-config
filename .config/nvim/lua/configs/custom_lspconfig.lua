@@ -86,7 +86,7 @@ lspconfig.pyright.setup {
 }
 
 -- ruff lsp for python
-lspconfig.ruff_lsp.setup {
+lspconfig.ruff.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "python" },

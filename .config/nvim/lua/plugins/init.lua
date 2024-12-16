@@ -1,20 +1,171 @@
 return {
+  "nvim-lua/plenary.nvim",
+
   {
-    "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
-    config = function()
-      require "configs.conform"
+    "nvchad/base46",
+    build = function()
+      require("base46").load_all_highlights()
     end,
   },
 
-  -- These are some examples, uncomment them if you want to see them work!
-  -- {
-  --   "kevinhwang91/nvim-ufo",
-  --   dependencies = {
-  --     "kevinhwang91/promise-async",
-  --     "notomo/promise.nvim",
-  --   },
-  -- },
+  {
+    "nvchad/ui",
+    lazy = false,
+    config = function()
+      require "nvchad"
+    end,
+  },
+
+  "nvzone/volt",
+  "nvzone/menu",
+  { "nvzone/minty", cmd = { "Huefy", "Shades" } },
+
+  {
+    "nvim-tree/nvim-web-devicons",
+    opts = function()
+      dofile(vim.g.base46_cache .. "devicons")
+      return { override = require "nvchad.icons.devicons" }
+    end,
+  },
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = "User FilePost",
+    opts = {
+      indent = { char = "│", highlight = "IblChar" },
+      scope = { char = "│", highlight = "IblScopeChar" },
+    },
+    config = function(_, opts)
+      dofile(vim.g.base46_cache .. "blankline")
+
+      local hooks = require "ibl.hooks"
+      hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+      require("ibl").setup(opts)
+
+      dofile(vim.g.base46_cache .. "blankline")
+    end,
+  },
+
+  -- file managing , picker etc
+  {
+    "nvim-tree/nvim-tree.lua",
+    cmd = { "NvimTreeToggle", "NvimTreeFocus" },
+    opts = function()
+      return require "nvchad.configs.nvimtree"
+    end,
+  },
+
+  {
+    "folke/which-key.nvim",
+    keys = { "<leader>", "<c-w>", '"', "'", "`", "c", "v", "g" },
+    cmd = "WhichKey",
+    opts = function()
+      dofile(vim.g.base46_cache .. "whichkey")
+      return {}
+    end,
+  },
+
+  -- formatting!
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = { lua = { "stylua" } },
+    },
+  },
+
+  -- git stuff
+  {
+    "lewis6991/gitsigns.nvim",
+    event = "User FilePost",
+    opts = function()
+      return require "nvchad.configs.gitsigns"
+    end,
+  },
+
+  -- lsp stuff
+  {
+    "williamboman/mason.nvim",
+    cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },
+    opts = function()
+      return require "nvchad.configs.mason"
+    end,
+  },
+
+  {
+    "neovim/nvim-lspconfig",
+    event = "User FilePost",
+    config = function()
+      require("nvchad.configs.lspconfig").defaults()
+    end,
+  },
+
+  -- load luasnips + cmp related in insert mode only
+  {
+    "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
+    dependencies = {
+      {
+        -- snippet plugin
+        "L3MON4D3/LuaSnip",
+        dependencies = "rafamadriz/friendly-snippets",
+        opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+        config = function(_, opts)
+          require("luasnip").config.set_config(opts)
+          require "nvchad.configs.luasnip"
+        end,
+      },
+
+      -- autopairing of (){}[] etc
+      {
+        "windwp/nvim-autopairs",
+        opts = {
+          fast_wrap = {},
+          disable_filetype = { "TelescopePrompt", "vim" },
+        },
+        config = function(_, opts)
+          require("nvim-autopairs").setup(opts)
+
+          -- setup cmp for autopairs
+          local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+          require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+        end,
+      },
+
+      -- cmp sources plugins
+      {
+        "saadparwaiz1/cmp_luasnip",
+        "hrsh7th/cmp-nvim-lua",
+        "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+      },
+    },
+    opts = function()
+      return require "nvchad.configs.cmp"
+    end,
+  },
+
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    cmd = "Telescope",
+    opts = function()
+      return require "nvchad.configs.telescope"
+    end,
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+    build = ":TSUpdate",
+    opts = function()
+      return require "nvchad.configs.treesitter"
+    end,
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
+    end,
+  },
   {
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
@@ -73,7 +224,7 @@ return {
     dependencies = {
       { "hrsh7th/nvim-cmp" },
       { "hrsh7th/cmp-nvim-lsp" }, -- Required
-      { "L3MON4D3/LuaSnip" },     -- Required
+      { "L3MON4D3/LuaSnip" }, -- Required
       { "rafamadriz/friendly-snippets" },
       { "hrsh7th/cmp-buffer" },
       { "hrsh7th/cmp-path" },
@@ -195,24 +346,24 @@ return {
   --   end
   -- },
   {
-    'SuperBo/fugit2.nvim',
+    "SuperBo/fugit2.nvim",
     opts = {
-      libgit2_path = 'libgit2.so.1.5',
+      libgit2_path = "libgit2.so.1.5",
       width = 150,
     },
     dependencies = {
-      'MunifTanjim/nui.nvim',
-      'nvim-tree/nvim-web-devicons',
-      'nvim-lua/plenary.nvim',
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "nvim-lua/plenary.nvim",
       {
-        'chrisgrieser/nvim-tinygit', -- optional: for Github PR view
-        dependencies = { 'stevearc/dressing.nvim' }
+        "chrisgrieser/nvim-tinygit", -- optional: for Github PR view
+        dependencies = { "stevearc/dressing.nvim" },
       },
     },
-    cmd = { 'Fugit2', 'Fugit2Diff', 'Fugit2Graph' },
+    cmd = { "Fugit2", "Fugit2Diff", "Fugit2Graph" },
     keys = {
-      { '<leader>fg', mode = 'n', '<cmd>Fugit2<cr>' }
-    }
+      { "<leader>fg", mode = "n", "<cmd>Fugit2<cr>" },
+    },
   },
   {
     "tris203/precognition.nvim",
@@ -245,26 +396,26 @@ return {
     "FelipeSanchezSoberanis/copy-path",
     event = { "BufNewFile", "BufReadPost", "BufWritePre", "BufWritePost" },
     config = function()
-      local copy_path = require("copy-path")
+      local copy_path = require "copy-path"
 
       vim.api.nvim_create_autocmd({ "FileType" }, {
         pattern = { "json" },
         callback = function(args)
           vim.keymap.set("n", "<leader>cp", function()
-            copy_path.copy_json_path({ register = "+" })
+            copy_path.copy_json_path { register = "+" }
           end, { buffer = args.buf })
-        end
+        end,
       })
 
       vim.api.nvim_create_autocmd({ "FileType" }, {
         pattern = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
         callback = function(args)
           vim.keymap.set("n", "<leader>cp", function()
-            copy_path.copy_javascript_path({ register = "+" })
+            copy_path.copy_javascript_path { register = "+" }
           end, { buffer = args.buf })
-        end
+        end,
       })
-    end
+    end,
   },
   {
     "kdheepak/lazygit.nvim",
@@ -288,26 +439,26 @@ return {
   {
     "luckasRanarison/clear-action.nvim",
     event = { "BufReadPre" },
-    opts = {}
+    opts = {},
   },
   {
-    'isakbm/gitgraph.nvim',
+    "isakbm/gitgraph.nvim",
     ---@type I.GGConfig
     opts = {
       symbols = {
-        merge_commit = 'M',
-        commit = '*',
+        merge_commit = "M",
+        commit = "*",
       },
       format = {
-        timestamp = '%H:%M:%S %d-%m-%Y',
-        fields = { 'hash', 'timestamp', 'author', 'branch_name', 'tag' },
+        timestamp = "%H:%M:%S %d-%m-%Y",
+        fields = { "hash", "timestamp", "author", "branch_name", "tag" },
       },
       hooks = {
         on_select_commit = function(commit)
-          print('selected commit:', commit.hash)
+          print("selected commit:", commit.hash)
         end,
         on_select_range_commit = function(from, to)
-          print('selected range:', from.hash, to.hash)
+          print("selected range:", from.hash, to.hash)
         end,
       },
     },
@@ -315,59 +466,32 @@ return {
       {
         "<leader>gl",
         function()
-          require('gitgraph').draw({}, { all = true, max_count = 5000 })
+          require("gitgraph").draw({}, { all = true, max_count = 5000 })
         end,
         desc = "GitGraph - Draw",
       },
     },
   },
   {
-    "OXY2DEV/markview.nvim",
-    lazy = false, -- Recommended
-    -- ft = "markdown" -- If you decide to lazy-load anyway
-
-    dependencies = {
-      -- You will not need this if you installed the
-      -- parsers manually
-      -- Or if the parsers are in your $RUNTIMEPATH
-      "nvim-treesitter/nvim-treesitter",
-
-      "nvim-tree/nvim-web-devicons"
-    }
-  }
+    "MeanderingProgrammer/render-markdown.nvim",
+    event = { "BufNewFile", "BufReadPost", "BufWritePre", "BufWritePost" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" },
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+  },
   -- {
-  --   "hrsh7th/nvim-cmp",
-  --   opts = {
-  --     sources = {
-  --       { name = "nvim_lsp" },
-  --       { name = "luasnip" },
-  --       { name = "buffer" },
-  --       { name = "nvim_lua" },
-  --       { name = "path" },
-  --       { name = "cmp_tabnine" },
-  --     },
-  --   },
+  --   "OXY2DEV/markview.nvim",
+  --   lazy = false, -- Recommended
+  --   -- ft = "markdown" -- If you decide to lazy-load anyway
   --
   --   dependencies = {
-  --     {
-  --       "tzachar/cmp-tabnine",
-  --       build = "./install.sh",
-  --       config = function()
-  --         local tabnine = require "cmp_tabnine.config"
-  --         tabnine:setup {} -- put your options here
-  --       end,
-  --     },
+  --     -- You will not need this if you installed the
+  --     -- parsers manually
+  --     -- Or if the parsers are in your $RUNTIMEPATH
+  --     "nvim-treesitter/nvim-treesitter",
+  --
+  --     "nvim-tree/nvim-web-devicons",
   --   },
-  -- },
-
-
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
   -- },
 }
