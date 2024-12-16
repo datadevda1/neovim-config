@@ -1,20 +1,5 @@
 return {
   {
-    "NvChad/base46",
-    branch = "v2.5",
-    build = function()
-      require("base46").load_all_highlights()
-    end,
-  },
-  {
-    "NvChad/ui",
-    lazy = false,
-    build = function()
-      dofile(vim.fn.stdpath "data" .. "/lazy/ui/lua/nvchad_feedback.lua")()
-    end,
-  },
-
-  {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save
     config = function()
@@ -78,7 +63,7 @@ return {
       "nvim-neotest/nvim-nio",
     },
     config = function(_, opts)
-      local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
+      local path = "~/.virtualenvs/debugpy/bin/python"
       require("dap-python").setup(path)
       require "dap.utils"
     end,
