@@ -78,6 +78,23 @@ return {
       vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
     end
 
+    local cmp = require("cmp")
+    -- `/` cmdline setup.
+    cmp.setup.cmdline("/", {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = {
+        { name = "buffer" },
+      },
+    })
+
+    -- `:` cmdline setup.
+    cmp.setup.cmdline(":", {
+      sources = cmp.config.sources({
+        { name = "path" },
+      }, {
+        { name = "cmdline" },
+      }),
+    })
     mason_lspconfig.setup_handlers({
       -- default handler for installed servers
       function(server_name)
@@ -107,6 +124,13 @@ return {
           filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
         })
       end,
+      ["marksman"] = function()
+        -- configure markdown language server
+        lspconfig["marksman"].setup({
+          capabilities = capabilities,
+          filetypes = { "markdown" },
+        })
+      end,
       ["emmet_ls"] = function()
         -- configure emmet language server
         lspconfig["emmet_ls"].setup({
@@ -129,6 +153,12 @@ return {
               },
             },
           },
+        })
+      end,
+      ["sqls"] = function()
+        lspconfig["sqls"].setup({
+          capabilities = capabilities,
+          filetypes = { "sql" },
         })
       end,
     })
